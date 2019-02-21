@@ -16,6 +16,9 @@ def crawl_website(db , id , text):
         title = title_and_year
         year = ""
 
+    # no website
+    if detail_soup.select('#a-page > div.a-row > div > div > div.a-fixed-left-grid > div > div.a-fixed-left-grid-col.a-col-right > div.a-section.a-spacing-none.a-spacing-top-small > div > div > p'):
+        return 0
     #offical_website
     category = detail_soup.select('#a-page > div.a-row > div > div > div.a-fixed-left-grid > div > div.a-fixed-left-grid-col.a-col-right > div.a-section.a-spacing-none.a-spacing-top-small > span')[0].text.strip()
     if category == 'Official web sites':
@@ -35,7 +38,7 @@ def crawl_website(db , id , text):
                       "imdb_website_url": url,
 
                       }
-            table_name = 'imdb_movie_website'
+            table_name = 'imdb_movie_website_full'
             db.insert_dict(record , table_name)
             print(record)
 

@@ -41,7 +41,7 @@ def crawl_movie_multidirector(db , id , text):
                           "imdb_director": director,
                           "imdb_director_id": director_id,
                           }
-                table_name = 'imdb_movie_director'
+                table_name = 'imdb_movie_director_full'
                 db.insert_dict(record, table_name)
                 print(record)
         director = director[:-2]

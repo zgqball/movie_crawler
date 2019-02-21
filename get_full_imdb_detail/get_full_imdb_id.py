@@ -13,12 +13,12 @@ def cut_string(string , sub , start_num , end_num):
         result = result + temp[i]
     return result
 
-def work():
+def work(year , start_id):
     moviemeter_stage = []
-    for i in range(0, 1200000, 50000):
+    for i in range(start_id, 1200000, 50000):
         moviemeter_stage.append(str(i) + "-" + str(i + 50000))
     moviemeter_stage.append("1200000-")
-    years = list(range(2000, 2019))
+    years = list(range(year, year+1))
     for year in years[::-1]:
         year = str(year)
         new_dir = r'imdb_whole_year_movie_backup/' + year + '/'
@@ -81,32 +81,34 @@ def work():
             time.sleep(3)
             driver.close()
 
-def get_id():
+def get_id(year):
     db = Database()
     db.connect()
     year_dir = 'imdb_whole_year_movie_backup/'
     years = os.listdir(year_dir)
-    for year in years:
-        if year[0] == '.':
-            continue
-        else:
-            search_website_path = year_dir + year + '/'
-            website_list = os.listdir(search_website_path)
-            for website in website_list:
-                f_open = open(search_website_path + website , 'r')
-                text = f_open.read()
-                soup = BeautifulSoup(text , 'lxml')
-                results = soup.find('div', {'id': 'results'}).find_all('li', {'class': 'title'})
-                for item in results:
-                    id = cut_string(item.find('a').attrs['href'] , '/' , 4 , 5)
-                    title_and_year = item.text.strip()
-                    title = title_and_year[:title_and_year.rindex('(') - 1].strip()
-                    year = title_and_year[title_and_year.rindex('(') + 1: -1]
-                    temp = {'imdb_id':id,
-                            'imdb_title':title,
-                            'imdb_year':year}
-                    db.insert_dict(temp , 'imdb_full_id')
+    search_website_path = year_dir + str(year) + '/'
+    website_list = os.listdir(search_website_path)
+    for website in website_list:
+        f_open = open(search_website_path + website , 'r')
+        text = f_open.read()
+        soup = BeautifulSoup(text , 'lxml')
+        results = soup.find('div', {'id': 'results'}).find_all('li', {'class': 'title'})
+        for item in results:
+            id = cut_string(item.find('a').attrs['href'] , '/' , 4 , 5)
+            title_and_year = item.text.strip()
+            title = title_and_year[:title_and_year.rindex('(') - 1].strip()
+            year = title_and_year[title_and_year.rindex('(') + 1: -1]
+            temp = {'imdb_id':id,
+                    'imdb_title':title,
+                    'imdb_year':year}
+            db.insert_dict(temp , 'imdb_full_id')
     db.close()
 
 if __name__ == '__main__':
-    get_id()
+    # year = 1999
+    for year in range(1916 , 1915 , -1):
+
+        #1916 700000-750000
+        start_id = 700000
+        work(year , start_id)
+        get_id(year)

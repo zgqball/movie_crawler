@@ -8,6 +8,7 @@ from crawl_detail import crawl_movie_detail
 from imdb_multidirector import crawl_movie_multidirector
 from crawl_cast import  crawl_cast
 from crawl_website import crawl_website
+from crawl_awards import crawl_awards_detail
 
 header = {"Accept": "text/html, */*; q=0.01",
           "Accept-Encoding": "gzip, deflate, br",
@@ -28,13 +29,21 @@ def save_base_web(id , type , text):
     f_save.write(text)
     f_save.close()
 
-def is_wrong_website(text , title):
+def wrong_record(id , year , type):
+    fw_wrong = open(str(year) + 'wrong_website.txt', 'a')
+    fw_wrong.write(type + " : " + id + '\n')
+    fw_wrong.close()
+
+
+
+def is_wrong_website(text , title , year , type):
     soup = BeautifulSoup(text , 'lxml')
-    soup.find('title').text
-    if soup.find('title').text =='500 - IMDbPro' or soup.find('div' , {"id":'upsell_widget'}):
-        fw_wrong = open('wrong_website.txt' , 'a')
-        fw_wrong.write(title + '\n')
-        fw_wrong.close()
+    try:
+        if soup.find('title').text =='500 - IMDbPro' or soup.find('div' , {"id":'upsell_widget'}):
+            wrong_record(id, year, type)
+            return 0
+    except:
+        wrong_record(id, year, type)
         return 0
     return 1
 
@@ -43,7 +52,8 @@ if __name__ == '__main__':
     db.connect()
     # imdb_id_list = db.get_imdb_id_list()
     # read local file
-    dir_path = 'imdb_backup/'
+    year = 1999
+    dir_path = 'imdb_backup/' + str(year) +'/'
     dir_list = os.listdir(dir_path)
 
     # dir_list = ['tt0457513' , 'tt3630276']
@@ -52,38 +62,60 @@ if __name__ == '__main__':
         if id[0] == '.':
             continue
         else:
-            # type = 'details'
-            # file_name = dir_path + id + "/"  + type + '.html'
-            # f_read = open(file_name , 'r')
-            # # r = requests.get(url , headers = header)
-            # html_content = f_read.read()
-            # f_read.close()
-            # if is_wrong_website(html_content , file_name):
-            #     print(file_name)
-            #     # save_base_web(id , type , html_content)
-            #     crawl_movie_multidirector(db , id , html_content)
-
-            # type = 'cast'
-            # file_name = dir_path + id + "/" + type + '.html'
-            # f_read = open(file_name, 'r')
-            # # r = requests.get(url , headers = header)
-            # html_content = f_read.read()
-            # f_read.close()
-            # if is_wrong_website(html_content, file_name):
-            #     print(file_name)
-            #     # save_base_web(id , type , html_content)
-            #     crawl_cast(db, id, html_content)
-
-            type = 'website'
-            file_name = dir_path + id + "/" + type + '.html'
-            f_read = open(file_name, 'r')
+            type = 'details'
+            file_name = dir_path + id + "/"  + type + '.html'
+            try:
+                f_read = open(file_name , 'r' , encoding= 'utf8')
+            except:
+                continue
             # r = requests.get(url , headers = header)
             html_content = f_read.read()
             f_read.close()
-            if is_wrong_website(html_content, file_name):
+            if is_wrong_website(html_content , id , year , type):
                 print(file_name)
                 # save_base_web(id , type , html_content)
-                crawl_website(db, id, html_content)
+                try:
+                    crawl_movie_detail(db , id , html_content)
+                    crawl_movie_multidirector(db , id , html_content)
+                    crawl_awards_detail(db, id, html_content)
+                except:
+                    wrong_record(id , year , type)
+
+            type = 'cast'
+            file_name = dir_path + id + "/" + type + '.html'
+            try:
+                f_read = open(file_name , 'r' , encoding= 'utf8')
+            except:
+                continue
+            # r = requests.get(url , headers = header)
+            html_content = f_read.read()
+            f_read.close()
+            if is_wrong_website(html_content, id , year , type):
+                print(file_name)
+                # save_base_web(id , type , html_content)
+                try:
+                    crawl_cast(db, id, html_content)
+                except:
+                    wrong_record(id , year , type)
+
+            type = 'website'
+            file_name = dir_path + id + "/" + type + '.html'
+            try:
+                f_read = open(file_name , 'r' , encoding= 'utf8')
+            except:
+                continue
+            # r = requests.get(url , headers = header)
+            html_content = f_read.read()
+            f_read.close()
+            if is_wrong_website(html_content, id , year , type):
+                print(file_name)
+                # save_base_web(id , type , html_content)
+                try:
+                    crawl_website(db, id, html_content)
+                except:
+                    wrong_record(id , year , type)
+
+
 
         #
         # # cast

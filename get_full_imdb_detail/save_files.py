@@ -28,7 +28,7 @@ if __name__ == '__main__':
     db = Database()
     db.connect()
     imdb_id_list = db.get_imdb_id_list()
-    imdb_id_list = ['tt0457513' , 'tt3630276']
+    # imdb_id_list = ['tt0457513' , 'tt3630276']
     for id in imdb_id_list:
         #details
         type = 'details'

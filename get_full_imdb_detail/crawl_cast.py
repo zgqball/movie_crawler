@@ -73,7 +73,7 @@ def crawl_cast(db , id , text):
                   "imdb_known_for_year": known_for_year,
                   "imdb_known_for_movie_id": known_for_id,
                   }
-        table_name = 'imdb_movie_cast'
+        table_name = 'imdb_movie_cast_full'
         db.insert_dict(record , table_name)
         print(record)
 

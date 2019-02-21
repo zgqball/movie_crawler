@@ -17,24 +17,11 @@ class Database():
 
         try:
             self.conn = pymysql.connect(host=db_host, user=db_user, passwd=db_pass, db=db_name,
-                                        charset=db_char)
+                                        charset=db_char ,connect_timeout = 10)
             self.cur = self.conn.cursor()
             print("Database connection succeeded!")
         except Exception as e:
             print(e)
-
-    def get_imdb_885_id_list(self):
-        #from all_city table
-        query = ("select distinct imdb_id "
-                 "from movie885_isr2nd ")
-        self.cur.execute(query)
-        self.conn.commit()
-        imdb_id_list= self.cur.fetchall()
-        imdb_id_list = list(imdb_id_list)
-        temp_list = []
-        for item in imdb_id_list:
-            temp_list.append(item[0])
-        return temp_list
 
     def get_imdb_id_list(self):
         #from all_city table

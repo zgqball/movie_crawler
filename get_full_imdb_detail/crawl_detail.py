@@ -166,7 +166,7 @@ def crawl_movie_detail(db , id , text):
               "imdb_distributor": distributor,
               "imdb_distributor_id": distributor_id,
               }
-    table_name = 'imdb_movie_detail'
+    table_name = 'imdb_movie_detail_full'
     db.insert_dict(record , table_name)
     print(record)
 

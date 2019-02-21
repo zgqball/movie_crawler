@@ -3,6 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/get_full_imdb_detail" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/streaming" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Amazon Prime" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/get_full_imdb_detail/imdb_885_review" />
       <excludeFolder url="file://$MODULE_DIR$/get_full_imdb_detail/imdb_backup" />
       <excludeFolder url="file://$MODULE_DIR$/get_full_imdb_detail/imdb_whole_year_movie_backup" />
       <excludeFolder url="file://$MODULE_DIR$/get_full_imdb_detail/imdb_whole_year_movie_backup/2018" />
